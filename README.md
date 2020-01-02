@@ -5,7 +5,7 @@ Automated jenkins container with preconfigured job coming from this tutorial (ht
 <H4>Steps for run:</H4>
 
 1.&nbsp;<code>$docker build --no-cache -t jenkins_automate .</code></BR>
-2.&nbsp;<code>$docker run --name docker-jenkins -itd -v /var/run/docker.sock:/var/run/docker.sock -p 1111:8080 -p 50000:50000 jenkins_automate </code></BR>
+2.&nbsp;<code>$docker run --name docker-jenkins -itd -v /var/run/docker.sock:/var/run/docker.sock -p 1111:8080 -p 50000:50000 jenkins_automate</code> or just run <code> ./start.sh</code> </BR>
 3.&nbsp;start web browser with folowing url http://localhost:1111/jenkins/blue</BR>
 4.&nbsp;user name and password is <b>admin</b></BR>
 5.&nbsp;run job "sample-maven-job"</BR>
