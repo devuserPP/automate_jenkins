@@ -10,13 +10,8 @@ ENV JENKINS_PASS admin
 
 
 # Skip the initial setup wizard
-#ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 ENV JAVA_OPTS "-Djenkins.install.runSetupWizard=false"
 
-# JENKINS_OPTS="${JENKINS_OPTS} --prefix=/jenkins" \
-#     JAVA_OPTS="${JAVA_OPTS} -Djenkins.install.runSetupWizard=false"
-
-#TODO
 # Jenkins will be available at http://localhost:1111/jenkins
 ENV JENKINS_OPTS "$JENKINS_OPTS --prefix=/jenkins"
 
@@ -29,7 +24,8 @@ COPY ./jenkins_config/default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
 #enable csrf in global security
 copy ./jenkins_config/configure-csrf-protection.groovy /usr/share/jenkins/ref/init.groovy.d/
 
-#COPY create-credential.groovy /usr/share/jenkins/ref/init.groovy.d/
+# Configuring Content Security Policy to show html reports with css and js inside Jenkins Server 
+COPY ./jenkins_config/csp.groovy /usr/share/jenkins/ref/init.groovy.d/
 
 # Name the jobs  
 ARG job_name_1="sample-maven-job"
@@ -47,10 +43,6 @@ COPY ./jenkins_config/${job_name_1}_config.xml /usr/share/jenkins/ref/jobs/${job
 COPY ./jenkins_config/credentials.xml /usr/share/jenkins/ref/
 
 
-#TODO missing triger for this job
-#COPY trigger-job.sh /usr/share/jenkins/ref/
-#RUN chown -R 777 /usr/share/jenkins/ref/trigger-job.sh
-
 #check current user in docker container
 RUN id
 
@@ -66,6 +58,12 @@ RUN curl https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz | tar xvz 
 RUN curl -L "https://github.com/docker/compose/releases/download/1.24.00/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod 755 /usr/local/bin/docker-compose
 
+
+
+# Add user jenkins inside group "root"
+ RUN adduser jenkins root
+#------ Reason -----
+# need to run docker client under jenkins user and connect to docker host 
 #$docker exec -it docker_jenkins bash
 #$docker info
 
@@ -73,9 +71,6 @@ RUN chmod 755 /usr/local/bin/docker-compose
 #$ls -all /var/run/docker.sock
 
 #can see that only user=root and group=root have RW permission
-
-# Add user jenkins inside group "root"
-RUN adduser jenkins root
 
 # Switch back to user jenkins
 USER jenkins
