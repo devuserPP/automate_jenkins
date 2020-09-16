@@ -13,10 +13,10 @@ fi
 
 
 if docker ps -a --format '{{.Names}}' | grep -Eq "^${CONTAINER_NAME}\$"; then
-echo 'try to remove -' ${CONTAINER_NAME}
+echo 'Im trying to remove old container at first -' ${CONTAINER_NAME}
 docker rm ${CONTAINER_NAME} -f
 else
-echo 'does not exist' ${CONTAINER_NAME}
+echo 'Im starting new container' ${CONTAINER_NAME}
 fi
 
 
@@ -24,6 +24,5 @@ docker run -d --name ${CONTAINER_NAME} \
 -p 1111:8080 \
 -p 50000:50000 \
 -v /var/run/docker.sock:/var/run/docker.sock \
+-v jenkins-data:/var/jenkins_home \
 jenkins_automate
-
-# mounting persistent volume on WSL does not work "-v jenkins-data:/var/jenkins_home \"
