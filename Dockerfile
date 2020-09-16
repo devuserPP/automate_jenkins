@@ -1,4 +1,4 @@
-FROM jenkinsci/blueocean:1.19.0
+FROM jenkinsci/blueocean:latest
 #$docker build --no-cache  -t jenkins_automate .
 #$docker run --name docker_jenkins -itd -v /var/run/docker.sock:/var/run/docker.sock -p 1111:8080 -p 50000:50000 jenkins_automate
 
@@ -52,13 +52,12 @@ USER root
 #update alpine
 RUN apk update
 
-
 #Install last version of docker
 RUN curl https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz | tar xvz -C /tmp/ && mv /tmp/docker/docker /usr/bin/docker
-RUN curl -L "https://github.com/docker/compose/releases/download/1.24.00/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+#Install 1.27.2 version of docker compose
+RUN curl -L "https://github.com/docker/compose/releases/download/1.27.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod 755 /usr/local/bin/docker-compose
-
-
 
 # Add user jenkins inside group "root"
  RUN adduser jenkins root
